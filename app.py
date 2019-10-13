@@ -20,6 +20,7 @@ import logging
 import logging.config
 
 from werkzeug.utils import redirect
+from twilio.rest import Client
 
 # logging.config.fileConfig('logger.conf')
 print("Starting Smart Invoice Hack ")
@@ -40,20 +41,37 @@ app = Flask(__name__)
 #
 # default response. we could make it fancy
 #
-@app.route("/")
+@app.route("/rei")
 def index():
     return Response("Welcome to Smart Invoice Hack v0.0.1"), 200
-
-
-@app.route('/remindPeople', methods=['GET'])
-def remind_people():
-    print('Working!')
-    return render_template('remindPeople.html')
 
 
 @app.route('/<name>')
 def hello_name(name):
     return "No service found for {}!".format(name)
+
+@app.route('/', methods=['GET'])
+def remind_people():
+    print('Working!')
+    return render_template('remindPeople.html')
+
+
+@app.route('/sendMessage', methods=['POST'])
+def send_message():
+    account_sid = 'AC4e46e215a995fbe16fa3de7b41ee4890'
+    auth_token = '403178f18830b23c14c55f4850894af0'
+    client = Client(account_sid, auth_token)
+    phoneNumber = request.form['PhoneNumber']
+    message = request.form['message']
+    time = request.form['time']
+    print('Time: ', time)
+    message = client.messages.create(
+                                body=message,
+                                from_='+14159961554',
+                                to=phoneNumber
+                                )
+
+    return 'Done'
 
 
 #
