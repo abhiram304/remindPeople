@@ -47,7 +47,7 @@ def index():
 
 @app.route('/remindPeople', methods=['GET'])
 def remind_people():
-    print('Working!)
+    print('Working!')
     return render_template('remindPeople.html')
 
 
